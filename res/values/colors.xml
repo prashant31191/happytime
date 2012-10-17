@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="list_background_color">#ffffffff</color>
+    <color name="cache_hint_color">#00000000</color>
+    <color name="white">#ffffffff</color>
+    <color name="black">#ff000000</color>
+    <color name="upload_cate_text">#ff2276ba</color>
+    <color name="green">#ff0cc054</color>
+    <color name="gray">#ffd0d0d0</color>
+    <color name="divider">#ffbebebe</color>
+    <color name="no_back_color">#00ffffff</color>
+    <color name="gray_color">#ff2970c5</color>
+    <color name="text_color">#ff3c4969</color>
+    <color name="share_text_color">#ff818283</color>
+    <color name="share_bg_color">#ffe9f0fa</color>
+    <color name="upload_text_color">#fffefefe</color>
+    <color name="upload_text_color_d">#ff41525e</color>
+    <color name="circle_page_color_s">#ff979897</color>
+    <color name="circle_page_color_d">#ffcbcbcb</color>
+    <color name="vpi__background_holo_dark">#ff000000</color>
+    <color name="vpi__background_holo_light">#fff3f3f3</color>
+    <color name="vpi__bright_foreground_holo_dark">@color/vpi__background_holo_light</color>
+    <color name="vpi__bright_foreground_holo_light">@color/vpi__background_holo_dark</color>
+    <color name="vpi__bright_foreground_disabled_holo_dark">#ff4c4c4c</color>
+    <color name="vpi__bright_foreground_disabled_holo_light">#ffb2b2b2</color>
+    <color name="vpi__bright_foreground_inverse_holo_dark">@color/vpi__bright_foreground_holo_light</color>
+    <color name="vpi__bright_foreground_inverse_holo_light">@color/vpi__bright_foreground_holo_dark</color>
+    <color name="default_circle_indicator_fill_color">#ffffffff</color>
+    <color name="default_circle_indicator_stroke_color">#ffdddddd</color>
+    <color name="default_title_indicator_footer_color">#ff6899ff</color>
+    <color name="default_title_indicator_selected_color">#ffffffff</color>
+    <color name="default_title_indicator_text_color">#ffaaaaaa</color>
+    <color name="red">#FF0000</color><!-- 红色 -->
+</resources>

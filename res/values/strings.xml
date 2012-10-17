@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">开心一刻</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">开心一刻</string>
+    <string name="favor">收藏夹</string>
+
+</resources>

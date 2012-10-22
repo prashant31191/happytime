@@ -4,18 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-
-
-
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -23,6 +16,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -31,14 +26,14 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 	private Button refresh,favorites;
 	private PullToRefreshListView refreshList;
 	private ListView listview;
-	private NetOperation netOperation=new NetOperation();
+	
 	
 	private SQLiteHelper helper=new SQLiteHelper(this,"kaixin_db");
 	SQLiteDatabase db;
 	String jsonData=null;
 	MyAdapter adapter;
 	Cursor cursor;
-	
+	public static int curPosition=0;
     public static int refreshsource=0;
     public static final int PULL_REFRESH=0;
     public static final int BUTTON_REFRESH=1;
@@ -59,6 +54,9 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 				if(NetState.isNetworkConnected(MainActivity.this)){
 					LoadTask task=new LoadTask();
 					task.execute();
+				}else{
+					refreshList.onRefreshComplete();
+					Toast.makeText(MainActivity.this, "无网络连接！", Toast.LENGTH_SHORT).show();
 				}
 				
 			}
@@ -104,7 +102,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 			Map< String, String> map = new HashMap< String, String>();
 			map.put("request", "getnewer");
 			map.put("maxid", String.valueOf(maxid));
-			String result=netOperation.postData(map);
+			String result=NetOperation.postData(map);
 			if(result==null)result="error";
 			return result;
 		}
@@ -117,8 +115,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 				refresh.setClickable(true);
 				refreshList.onRefreshComplete();
 			}else if(refreshsource==BUTTON_REFRESH){
-				
-				
+				refresh.clearAnimation();
+				refresh.setClickable(true);
 			}
 			
 			if(result.startsWith("[")){
@@ -154,12 +152,12 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 	public void bindAdapter(){
 		
 		db=helper.getReadableDatabase();
-        cursor=db.query("kaixin", new String[]{"num as _id","title","substr(content,1,20) as simcontent"}, null, null, null, null, "num DESC");
+        cursor=db.query("kaixin", new String[]{"distinct num as _id","title","substr(content,1,20) as simcontent"}, null, null, null, null, "num DESC");
         
          adapter=new MyAdapter(this, cursor);
         
         listview.setAdapter(adapter);
-       
+       listview.setSelection(curPosition);
 	}
 	public int getMaxid(){
 		SQLiteDatabase db=helper.getReadableDatabase();
@@ -228,11 +226,15 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 		// TODO Auto-generated method stub
 		
 		if(v==refresh){
-			refresh.setClickable(false);
+			
 			refreshsource=BUTTON_REFRESH;
 			if(NetState.isNetworkConnected(MainActivity.this)){
+				refresh.setClickable(false);
 				LoadTask task=new LoadTask();
 				task.execute();
+				Animation animation=AnimationUtils.loadAnimation(this, R.anim.refresh_rotate);
+				refresh.setAnimation(animation);
+				
 			}else{
 				Toast.makeText(this, "无网络连接!", Toast.LENGTH_SHORT).show();
 			}
@@ -260,7 +262,9 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 	// TODO Auto-generated method stub
+	
 	ListView list=(ListView)parent;
+	curPosition=list.getFirstVisiblePosition();
 	Cursor itemcursor=(Cursor)list.getItemAtPosition(position);
 	int itemid=itemcursor.getInt(itemcursor.getColumnIndex("_id"));
 	itemcursor.close();
